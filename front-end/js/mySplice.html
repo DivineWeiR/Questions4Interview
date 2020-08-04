@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>我的数组处理</title>
+    </head>
+    <body>
+        <script>
+            /*
+             * slice() 方法可从已有的数组中返回选定的元素。
+             * slice()方法可提取字符串的某个部分，并以新的字符串返回被提取的部分。
+             * 注意：
+             * 1.slice(start,end) 方法不会改变原始数组
+             * 2.start是开始复制的起始位置，默认为0，end是结束位置，默认为数组长度
+             * 3.如果传入的参数是负数 代表从后往前数 比如-1指的是最后一项元素
+             * 4.slice是浅拷贝
+             */
+            let arr = [1, 2, 3, 4, 5];
+            console.log("=========slice==========");
+            console.log(arr.slice()); //[1, 2, 3, 4, 5]
+            console.log(arr.slice(8)); //[]
+            console.log(arr.slice(-1)); //[5]
+            console.log(arr.slice(-3, -1)); //[3, 4]
+            console.log(arr.slice(2, 4)); //[3, 4]
+            console.log(arr.slice(2)); //[3, 4, 5]
+
+            Array.prototype.mySlice = function (begin = 0, end = this.length) {
+                const result = [];
+                if (begin > this.length) {
+                    return result;
+                }
+                if (begin < 0) {
+                    begin = begin + this.length < 0 ? 0 : begin + this.length;
+                }
+                if (end < 0) {
+                    end = end + this.length < 0 ? 0 : end + this.length;
+                }
+
+                for (let i = begin; i < end; i++) {
+                    result.push(this[i]);
+                }
+                return result;
+            };
+            console.log("========MySlice=========");
+            console.log(arr.mySlice()); //[1, 2, 3, 4, 5]
+            console.log(arr.mySlice(8)); //[]
+            console.log(arr.mySlice(-1)); //[5]
+            console.log(arr.mySlice(-3, -1)); //[3, 4]
+            console.log(arr.mySlice(2, 4)); //[3, 4]
+            console.log(arr.mySlice(2)); //[3, 4, 5]
+        </script>
+
+        <script>
+            /**
+             * splice() 方法用于添加、修改或删除数组中的元素。
+             * 返回值是删除掉的数组元素 如果删除0个 返回空数组
+             * 注意：这种方法会改变原始数组。
+             * splice方法的参数为(delIndex,deleteCount,insert1,insert2...)
+             * delIndex是要删除的元素下标，为负时，处理与slice相同，大于等于数组长度时，为数组长度
+             * deleteCount默认为0，是要从delIndex处删除的元素个数，这些被删除的元素将作为splice函数的返回值
+             * 之后的所有参数insert1,insert2...都是从delIndex处插入到原始数组的元素
+             */
+            console.log("=========splice==========");
+            arr = [1, 2, 3, 4, 5];
+            console.log(arr.splice(8), arr); //[] [1, 2, 3, 4, 5]
+            arr = [1, 2, 3, 4, 5];
+            console.log(arr.splice(-1), arr); //[5] [1, 2, 3, 4]
+            arr = [1, 2, 3, 4, 5];
+            console.log(arr.splice(-3, -1), arr); //[] [1, 2, 3, 4, 5]
+            arr = [1, 2, 3, 4, 5];
+            console.log(arr.splice(2, 4), arr); //[3, 4, 5] [1, 2]
+            arr = [1, 2, 3, 4, 5];
+            console.log(arr.splice(2), arr); //[3, 4, 5] [1, 2]
+            arr = [1, 2, 3, 4, 5];
+            console.log(arr.splice(2, 4, 7, 8), arr); //[3, 4, 5] [1, 2, 7, 8]
+
+            Array.prototype.mySplice = function (start, count = 0, ...inserts) {
+                // console.log(start,count,inserts);
+                inserts = inserts || [];
+                if (start > this.length) {
+                    start = this.length;
+                }
+                if (start < 0) {
+                    start = Math.max(this, length + start, 0);
+                }
+                const result = this.slice(start, start + count); //获取返回值
+                const newArray = [
+                    ...this.slice(0, start),
+                    ...inserts,
+                    ...this.slice(start + count),
+                ];
+                //当this长度大于newArray时，先将超出部分删除
+                while (this.length > newArray.length) {
+                    this.pop();
+                }
+                for (let i = 0; i < newArray.length; i++) {
+                    this[i] = newArray[i];
+                }
+                return result;
+            };
+
+            console.log("=========mySplice==========");
+            arr = [1, 2, 3, 4, 5];
+            console.log(arr.mySplice(8), arr); //[] [1, 2, 3, 4, 5]
+            arr = [1, 2, 3, 4, 5];
+            console.log(arr.mySplice(-1), arr); //[5] [1, 2, 3, 4]
+            arr = [1, 2, 3, 4, 5];
+            console.log(arr.mySplice(-3, -1), arr); //[] [1, 2, 3, 4, 5]
+            arr = [1, 2, 3, 4, 5];
+            console.log(arr.mySplice(2, 4), arr); //[3, 4, 5] [1, 2]
+            arr = [1, 2, 3, 4, 5];
+            console.log(arr.mySplice(2), arr); //[3, 4, 5] [1, 2]
+            arr = [1, 2, 3, 4, 5];
+            console.log(arr.mySplice(2, 4, 7, 8), arr); //[3, 4, 5] [1, 2, 7, 8]
+        </script>
+    </body>
+</html>
