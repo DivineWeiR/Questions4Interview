@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>This test</title>
+    </head>
+    <body>
+        <script>
+            // 'use strict';
+
+            let name = "window";
+            var nameV = "windowV";
+            function f() {
+                let name = "f";
+                var nameV = "fV";
+                if (true) {
+                    let name = "if";
+                    var nameV = "ifV";
+                }
+                // console.log(this);
+                console.log(this.name);
+            }
+
+            f();
+        </script>
+    </body>
+</html>
